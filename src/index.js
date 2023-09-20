@@ -41,13 +41,12 @@ catsList.addEventListener('change', function (event) {
 
   fetchCatImageByBreed(breedId)
     .then(data => {
-      // if (data && data.length > 0) {
-      //   const imageUrl = data[0].url;
-      //   console.log('Losowe zdjęcie kota:', imageUrl);
-      // } else {
-      //   console.log('Nie znaleziono zdjęcia kota.');
-      // }
-      console.log(data[0].url);
+      if (data && data.length > 0) {
+        const imageUrl = data[0].url;
+        console.log('Losowe zdjęcie kota:', imageUrl);
+      } else {
+        console.log('Nie znaleziono zdjęcia kota.');
+      }
     })
     .catch(error => console.log(error));
 });
