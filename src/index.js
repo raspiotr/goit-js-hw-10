@@ -6,11 +6,22 @@ axios.defaults.headers.common['x-api-key'] = apiKey;
 import Choices from 'choices.js/public/assets/scripts/choices';
 import 'choices.js/public/assets/styles/choices.css';
 
+import { Spinner } from 'spin.js';
+
 import {
   fetchBreeds,
   fetchCatByBreed,
   fetchCatImageByBreed,
 } from './js/cat-api.js';
+
+const loader = new Spinner({
+  lines: 20,
+  length: 50,
+  width: 15,
+  radius: 100,
+  scale: 1,
+  color: '#000',
+});
 
 const body = document.querySelector('body');
 body.style.fontFamily = 'Verdana';
@@ -21,6 +32,9 @@ catsList.style.marginBottom = '25px';
 const loaderMessage = document.querySelector('.loader');
 loaderMessage.style.display = 'none';
 loaderMessage.style.fontWeight = 'bold';
+loaderMessage.style.textAlign = 'center';
+loaderMessage.style.marginTop = '5vw';
+loaderMessage.append(loader.spin().el);
 
 const errorMessage = document.querySelector('.error');
 errorMessage.style.display = 'none';
@@ -37,7 +51,7 @@ function renderCatsList(cats) {
 
 const catInfoBox = document.querySelector('.cat-info');
 catInfoBox.style.display = 'flex';
-catInfoBox.style.gap = '60px';
+catInfoBox.style.gap = '80px';
 catInfoBox.style.justifyContent = 'center';
 
 function createImgElement(src, alt, height) {
