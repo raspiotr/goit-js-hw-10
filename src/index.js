@@ -13,6 +13,13 @@ const body = document.querySelector('body');
 body.style.fontFamily = 'Verdana';
 
 const catsList = document.querySelector('.breed-select');
+catsList.style.marginBottom = '15px';
+
+const loaderMessage = document.querySelector('.loader');
+const errorMessage = document.querySelector('.error');
+loaderMessage.style.display = 'none';
+loaderMessage.style.fontWeight = 'bold';
+errorMessage.style.display = 'none';
 
 function renderCatsList(cats) {
   const markup = cats
@@ -24,6 +31,8 @@ function renderCatsList(cats) {
 }
 
 const catInfoBox = document.querySelector('.cat-info');
+catInfoBox.style.display = 'flex';
+catInfoBox.style.gap = '30px';
 
 function createImgElement(src, alt, height) {
   const imgElement = document.createElement('img');
@@ -52,17 +61,23 @@ function createTextInfoElement(name, description, temperament) {
   catInfoBox.append(divElement);
 }
 
-document.addEventListener(
-  'DOMContentLoaded',
+document.addEventListener('DOMContentLoaded', () => {
+  catsList.style.display = 'none';
+  loaderMessage.style.display = 'block';
   fetchBreeds()
-    .then(cats => renderCatsList(cats))
-    .catch(error => console.log(error))
-);
+    .then(cats => {
+      renderCatsList(cats);
+      loaderMessage.style.display = 'none';
+      catsList.style.display = 'inline';
+    })
+    .catch(error => console.log(error));
+});
 
 catsList.addEventListener('change', event => {
+  catInfoBox.style.display = 'none';
+  loaderMessage.style.display = 'block';
   catInfoBox.innerHTML = '';
-  catInfoBox.style.display = 'flex';
-  catInfoBox.style.gap = '30px';
+
   const breedId = event.target.value;
   console.log('Wybrana opcja:', breedId);
   fetchCatImageByBreed(breedId)
@@ -74,6 +89,8 @@ catsList.addEventListener('change', event => {
         console.log('Losowe zdjęcie kota:', imageUrl);
         console.log('Name:', catName);
         createImgElement(imageUrl, catName, 300);
+        loaderMessage.style.display = 'none';
+        catInfoBox.style.display = 'flex';
       } else {
         console.log('Nie znaleziono zdjęcia kota.');
       }
@@ -86,6 +103,8 @@ catsList.addEventListener('change', event => {
       console.log(cat.description);
       console.log(cat.temperament);
       createTextInfoElement(cat.name, cat.description, cat.temperament);
+      loaderMessage.style.display = 'none';
+      catInfoBox.style.display = 'flex';
     })
     .catch(error => console.log(error));
 });
