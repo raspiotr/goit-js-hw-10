@@ -13,7 +13,7 @@ const body = document.querySelector('body');
 body.style.fontFamily = 'Verdana';
 
 const catsList = document.querySelector('.breed-select');
-catsList.style.marginBottom = '15px';
+catsList.style.marginBottom = '25px';
 
 const loaderMessage = document.querySelector('.loader');
 loaderMessage.style.display = 'none';
@@ -34,7 +34,7 @@ function renderCatsList(cats) {
 
 const catInfoBox = document.querySelector('.cat-info');
 catInfoBox.style.display = 'flex';
-catInfoBox.style.gap = '30px';
+catInfoBox.style.gap = '25px';
 
 function createImgElement(src, alt, height) {
   const imgElement = document.createElement('img');
@@ -86,14 +86,14 @@ catsList.addEventListener('change', event => {
   catInfoBox.innerHTML = '';
 
   const breedId = event.target.value;
-  console.log('Wybrana opcja:', breedId);
+  //console.log('Selected option:', breedId);
   fetchCatImageByBreed(breedId)
     .then(data => {
       const imageUrl = data[0].url;
       const catName =
         event.target.options[event.target.selectedIndex].textContent;
-      console.log('Losowe zdjęcie kota:', imageUrl);
-      console.log('Name:', catName);
+      // console.log('Photo link:', imageUrl);
+      // console.log('Name:', catName);
       createImgElement(imageUrl, catName, 300);
       loaderMessage.style.display = 'none';
       catInfoBox.style.display = 'flex';
@@ -107,9 +107,9 @@ catsList.addEventListener('change', event => {
 
   fetchCatByBreed(breedId)
     .then(cat => {
-      console.log(cat.name);
-      console.log(cat.description);
-      console.log(cat.temperament);
+      // console.log('Name: ', cat.name);
+      // console.log('Description: ', cat.description);
+      // console.log('Temperament: ', cat.temperament);
       createTextInfoElement(cat.name, cat.description, cat.temperament);
       loaderMessage.style.display = 'none';
       catInfoBox.style.display = 'flex';
