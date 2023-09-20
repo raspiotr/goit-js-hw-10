@@ -16,10 +16,12 @@ const catsList = document.querySelector('.breed-select');
 catsList.style.marginBottom = '15px';
 
 const loaderMessage = document.querySelector('.loader');
-const errorMessage = document.querySelector('.error');
 loaderMessage.style.display = 'none';
 loaderMessage.style.fontWeight = 'bold';
+
+const errorMessage = document.querySelector('.error');
 errorMessage.style.display = 'none';
+errorMessage.style.color = 'red';
 
 function renderCatsList(cats) {
   const markup = cats
@@ -37,7 +39,7 @@ catInfoBox.style.gap = '30px';
 function createImgElement(src, alt, height) {
   const imgElement = document.createElement('img');
   imgElement.src = src;
-  imgElement.alt = alt;
+  imgElement.alt = `${alt} cat`;
   imgElement.height = height;
   catInfoBox.prepend(imgElement);
 }
@@ -64,38 +66,44 @@ function createTextInfoElement(name, description, temperament) {
 document.addEventListener('DOMContentLoaded', () => {
   catsList.style.display = 'none';
   loaderMessage.style.display = 'block';
+  errorMessage.style.display = 'none';
   fetchBreeds()
     .then(cats => {
       renderCatsList(cats);
       loaderMessage.style.display = 'none';
       catsList.style.display = 'inline';
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      loaderMessage.style.display = 'none';
+      errorMessage.style.display = 'block';
+    });
 });
 
 catsList.addEventListener('change', event => {
   catInfoBox.style.display = 'none';
   loaderMessage.style.display = 'block';
+  errorMessage.style.display = 'none';
   catInfoBox.innerHTML = '';
 
   const breedId = event.target.value;
   console.log('Wybrana opcja:', breedId);
   fetchCatImageByBreed(breedId)
     .then(data => {
-      if (data && data.length > 0) {
-        const imageUrl = data[0].url;
-        const catName =
-          event.target.options[event.target.selectedIndex].textContent;
-        console.log('Losowe zdjęcie kota:', imageUrl);
-        console.log('Name:', catName);
-        createImgElement(imageUrl, catName, 300);
-        loaderMessage.style.display = 'none';
-        catInfoBox.style.display = 'flex';
-      } else {
-        console.log('Nie znaleziono zdjęcia kota.');
-      }
+      const imageUrl = data[0].url;
+      const catName =
+        event.target.options[event.target.selectedIndex].textContent;
+      console.log('Losowe zdjęcie kota:', imageUrl);
+      console.log('Name:', catName);
+      createImgElement(imageUrl, catName, 300);
+      loaderMessage.style.display = 'none';
+      catInfoBox.style.display = 'flex';
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      loaderMessage.style.display = 'none';
+      errorMessage.style.display = 'block';
+      const imageErrorUrl = 'https://tinyurl.com/4ns2k7w2';
+      createImgElement(imageErrorUrl, 'Placeholder error', 300);
+    });
 
   fetchCatByBreed(breedId)
     .then(cat => {
@@ -106,5 +114,8 @@ catsList.addEventListener('change', event => {
       loaderMessage.style.display = 'none';
       catInfoBox.style.display = 'flex';
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      loaderMessage.style.display = 'none';
+      errorMessage.style.display = 'block';
+    });
 });
