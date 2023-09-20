@@ -3,6 +3,9 @@ const apiKey =
   'live_UOs61qgqDHBR896dKOCKKP3GVLfO1RqJbthIXAB6dUXQ5lbcXL65dI8OB1kfoBHc';
 axios.defaults.headers.common['x-api-key'] = apiKey;
 
+import Choices from 'choices.js/public/assets/scripts/choices';
+import 'choices.js/public/assets/styles/choices.css';
+
 import {
   fetchBreeds,
   fetchCatByBreed,
@@ -34,7 +37,8 @@ function renderCatsList(cats) {
 
 const catInfoBox = document.querySelector('.cat-info');
 catInfoBox.style.display = 'flex';
-catInfoBox.style.gap = '25px';
+catInfoBox.style.gap = '60px';
+catInfoBox.style.justifyContent = 'center';
 
 function createImgElement(src, alt, height) {
   const imgElement = document.createElement('img');
@@ -76,6 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => {
       loaderMessage.style.display = 'none';
       errorMessage.style.display = 'block';
+    })
+    .finally(() => {
+      if (catsList) {
+        new Choices(catsList, {
+          itemSelectText:
+            'Press to select and display information about this cat',
+        });
+      }
     });
 });
 
@@ -94,7 +106,7 @@ catsList.addEventListener('change', event => {
         event.target.options[event.target.selectedIndex].textContent;
       // console.log('Photo link:', imageUrl);
       // console.log('Name:', catName);
-      createImgElement(imageUrl, catName, 300);
+      createImgElement(imageUrl, catName, 500);
       loaderMessage.style.display = 'none';
       catInfoBox.style.display = 'flex';
     })
@@ -102,7 +114,7 @@ catsList.addEventListener('change', event => {
       loaderMessage.style.display = 'none';
       errorMessage.style.display = 'block';
       const imageErrorUrl = 'https://tinyurl.com/4ns2k7w2';
-      createImgElement(imageErrorUrl, 'Placeholder error', 300);
+      createImgElement(imageErrorUrl, 'Placeholder error', 500);
     });
 
   fetchCatByBreed(breedId)
