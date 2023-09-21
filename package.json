@@ -21,7 +21,8 @@
     "axios": "^1.5.0",
     "choices.js": "^10.2.0",
     "modern-normalize": "^1.1.0",
-    "spin.js": "^4.1.1"
+    "spin.js": "^4.1.1",
+    "sweetalert2": "^11.7.28"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.6.0",

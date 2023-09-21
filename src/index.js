@@ -8,6 +8,8 @@ import 'choices.js/public/assets/styles/choices.css';
 
 import { Spinner } from 'spin.js';
 
+import Swal from 'sweetalert2';
+
 import {
   fetchBreeds,
   fetchCatByBreed,
@@ -25,6 +27,14 @@ const loader = new Spinner({
 
 const body = document.querySelector('body');
 body.style.fontFamily = 'Verdana';
+body.style.backgroundColor = '#f9f4e7';
+
+const titleElement = document.createElement('h1');
+titleElement.textContent = 'Cat Search';
+titleElement.style.fontWeight = 'bold';
+titleElement.style.textAlign = 'center';
+titleElement.style.marginTop = '20px';
+body.prepend(titleElement);
 
 const catsList = document.querySelector('.breed-select');
 catsList.style.marginBottom = '25px';
@@ -39,6 +49,16 @@ loaderMessage.append(loader.spin().el);
 const errorMessage = document.querySelector('.error');
 errorMessage.style.display = 'none';
 errorMessage.style.color = 'red';
+
+const alertOptions = {
+  title: 'Alert!',
+  text: errorMessage.textContent,
+  icon: 'warning',
+  allowDuplicates: false,
+  color: 'red',
+  iconColor: 'red',
+  confirmButtonColor: 'grey',
+};
 
 function renderCatsList(cats) {
   const markup = cats
@@ -65,7 +85,7 @@ function createImgElement(src, alt, height) {
 function createTextInfoElement(name, description, temperament) {
   const divElement = document.createElement('div');
   divElement.style.maxWidth = '600px';
-  const headingElement = document.createElement('h1');
+  const headingElement = document.createElement('h2');
   const descriptionElement = document.createElement('p');
   const temperamentElement = document.createElement('p');
   headingElement.textContent = name;
@@ -84,7 +104,7 @@ function createTextInfoElement(name, description, temperament) {
 document.addEventListener('DOMContentLoaded', () => {
   catsList.style.display = 'none';
   loaderMessage.style.display = 'block';
-  errorMessage.style.display = 'none';
+  //errorMessage.style.display = 'none';
   fetchBreeds()
     .then(cats => {
       renderCatsList(cats);
@@ -93,7 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => {
       loaderMessage.style.display = 'none';
-      errorMessage.style.display = 'block';
+      //errorMessage.style.display = 'block';
+      Swal.fire(alertOptions); // instead of errorMessage.style.display
     })
     .finally(() => {
       if (catsList) {
@@ -108,40 +129,38 @@ document.addEventListener('DOMContentLoaded', () => {
 catsList.addEventListener('change', event => {
   catInfoBox.style.display = 'none';
   loaderMessage.style.display = 'block';
-  errorMessage.style.display = 'none';
+  //errorMessage.style.display = 'none';
   catInfoBox.innerHTML = '';
 
   const breedId = event.target.value;
-  //console.log('Selected option:', breedId);
+
   fetchCatImageByBreed(breedId)
     .then(data => {
       const imageUrl = data[0].url;
       const catName =
         event.target.options[event.target.selectedIndex].textContent;
-      // console.log('Photo link:', imageUrl);
-      // console.log('Name:', catName);
+
       createImgElement(imageUrl, catName, 500);
       loaderMessage.style.display = 'none';
       catInfoBox.style.display = 'flex';
     })
     .catch(error => {
       loaderMessage.style.display = 'none';
-      errorMessage.style.display = 'block';
+      //errorMessage.style.display = 'block';
+      Swal.fire(alertOptions); // instead of errorMessage.style.display
       const imageErrorUrl = 'https://tinyurl.com/4ns2k7w2';
       createImgElement(imageErrorUrl, 'Placeholder error', 500);
     });
 
   fetchCatByBreed(breedId)
     .then(cat => {
-      // console.log('Name: ', cat.name);
-      // console.log('Description: ', cat.description);
-      // console.log('Temperament: ', cat.temperament);
       createTextInfoElement(cat.name, cat.description, cat.temperament);
       loaderMessage.style.display = 'none';
       catInfoBox.style.display = 'flex';
     })
     .catch(error => {
       loaderMessage.style.display = 'none';
-      errorMessage.style.display = 'block';
+      //errorMessage.style.display = 'block';
+      Swal.fire(alertOptions); // instead of errorMessage.style.display
     });
 });
